@@ -1,0 +1,101 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`multi-switch`
+selectable switch element
+
+@demo demo/index.html 
+-->
+
+<dom-module id="multi-switch">
+    <template>
+        <style>
+            :host {
+                display: block;
+                --selected-color: #5e93ff;
+            }
+            #selection {
+                position: relative;
+                display: inline-block;
+                color: #ffffff;
+                min-width: 80px;
+                height: 40px;
+                background: var(--selected-color);
+                text-align: center;
+                line-height: 40px;
+                border-radius: 4px;
+                box-shadow: inset 0 0 0 0px #ffffff,inset 0 2px 8px #585858;
+            }
+
+            #dropdown {
+                display: none;
+                position: absolute;
+                color: #ffffff;
+                background-color: rgba(0, 0, 0, 0.65);
+                min-width: 80px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                border-radius: 3px;
+            }
+
+            #selection:hover #dropdown {
+                display: block;
+            }
+            .item {
+                width: 100%;
+            }
+            .item:hover {
+                background-color: rgba(0,0,0,0.1);
+            }
+            .item:active {
+                background-color: yellow;
+            }
+        </style>
+        <div id="selection">
+            {{selected}}
+
+        <div id="dropdown">
+            <template is="dom-repeat" items="{{options}}">
+                <div class="item" on-tap="selectOption">{{item}}</div>
+            </template>
+        </div>
+
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+
+            is: 'multi-switch',
+            properties: {
+                selected: {
+                    type: String,
+                    notify: true
+                },
+                options: {
+                    type: Array,
+                    value: []
+                },
+                colors: {
+                    type: Array,
+                    value: []
+                }
+            },
+            defaultSelected: function(options) {
+                return options[0]
+            },
+            selectOption: function(e, detail) {
+                this.selected = e.currentTarget.innerHTML;
+                for(var i=0; i< this.options.length; i++) {
+                    if(this.options[i] == this.selected){
+                        this.customStyle['--selected-color'] = this.colors[i];
+                        this.updateStyles();
+                    }
+                }
+            },
+            ready: function() {
+                this.selected = this.options[0];
+            }
+
+        });
+    </script>
+</dom-module>
